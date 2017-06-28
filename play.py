@@ -18,7 +18,7 @@ maxnum = get_big_number(mypath) + 1
 #move_file(mypath, "answerwaiting", "answerdata", str(maxnum))
 qus = make_question(mypath, datas) #一个问题类对象
 qus.write_history(0)
-writefile(mypath, dataname, datas)
+#writefile(mypath, dataname, datas)
 
 def datas_to_issue():
 	"从数据集里找出记忆度最低的问题"
