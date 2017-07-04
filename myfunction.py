@@ -63,6 +63,16 @@ def make_question(mypath, datas, number = None):
 		datas[number] = question
 	return question
 	
+def datas_to_issue(datas):
+	"从数据集里找出记忆度最低的问题"
+	def whoisbig(q1, q2):
+		if q1.whatis_remenber() < q2.whatis_remenber():
+			return q1
+		else :
+			return q2
+	question = reduce(whoisbig, datas.values())
+	return question
+
 class mondai:
 	"""问题类，每个类存放一个问题的数据"""
 	"""公式为e^-(t/(3^n))。知识度n是3的指数。t时间单位是天"""
