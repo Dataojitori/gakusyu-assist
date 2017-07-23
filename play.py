@@ -26,7 +26,10 @@ def give():
 	qus = datas_to_issue(datas)			
 	imgname = qus.imgnum
 	shutil.move(mypath + "\\" + "questiondata" + "\\" + imgname, mypath + "\\" + "questionwaiting") 
-	shutil.move(mypath + "\\" + "answerdata" + "\\" + imgname, mypath + "\\" + "answerwaiting") 
+	try :
+		shutil.move(mypath + "\\" + "answerdata" + "\\" + imgname, mypath + "\\" + "answerwaiting") 
+	except IOError:
+		print "没有答案图片"
 
 def back(point):
 	"记录分数并返还问题图片"

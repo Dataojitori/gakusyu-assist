@@ -1,0 +1,34 @@
+body {
+  background-color: #cccccc;
+}
+
+.bg {
+  height: 837px;
+  width: 900px;
+  position: relative;
+  left: -400px;
+  top: -210px;
+  background-image: url(https://upload.wikimedia.org/wikipedia/commons/c/ca/Sasa_Rindo.svg);
+  background-size: cover;
+  opacity: 0.7;
+  filter: alpha(opacity=70);
+}
+
+h1 {
+  color: #1F4788;
+  position: absolute;
+  top: 35%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.sub{
+  outline: #999999 dotted thick;
+	color: #1F4788;
+  position: absolute;
+  left: 50%;
+  top: 60%;
+  transform: translate(-50%, -50%);
+  text-align:center;
+	
+}
