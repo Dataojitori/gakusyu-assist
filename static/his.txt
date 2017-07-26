@@ -756,7 +756,7 @@ sg8
 (lp237
 sg13
 (lp238
-S'chemical'
+S'chemistry'
 p239
 asg16
 F0.0

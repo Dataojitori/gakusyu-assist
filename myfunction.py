@@ -82,9 +82,9 @@ class mondai:
 		self.tag = []
 		self.memo = []
 		self.history = [] #♥记录列表，包含子列表(时间，分数)
-		self.lasttime = 0 #♥最后一次学习的时间，单位为1970以来的秒
-		self.understand = 0 #♥理解度,0~正无穷
-		self.remember = 0 #记忆度,0~1.不需要保存,即用即算
+		self.lasttime = 0. #♥最后一次学习的时间，单位为1970以来的秒
+		self.understand = 0. #♥理解度,0~正无穷
+		self.remember = 0. #记忆度,0~1.不需要保存,即用即算
 
 	def write_memo(self, memo):
 		"记录文字笔记"
@@ -115,7 +115,7 @@ class mondai:
 		# 	zen = (1 - self.remember) * point 
 		# else :
 		# 	zen = -self.remember * (1 - point)
-		self.whatis_remenber() #更新现在记忆度
+		self.whatis_remenber() #更新现在记忆度	
 		self.understand += point - self.remember	
 		self.wordtime = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) 
 		machinetime = time.time()

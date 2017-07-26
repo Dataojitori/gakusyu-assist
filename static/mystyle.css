@@ -17,18 +17,34 @@ body {
 h1 {
   color: #1F4788;
   position: absolute;
-  top: 35%;
+  top: 20%;
   left: 50%;
   transform: translate(-50%, -50%);
 }
 
-.sub{
+.sub {
   outline: #999999 dotted thick;
-	color: #1F4788;
+  color: #1F4788;
   position: absolute;
   left: 50%;
-  top: 60%;
+  top: 50%;
   transform: translate(-50%, -50%);
-  text-align:center;
-	
+  text-align: center;
+}
+
+input.upfile {
+  width: 20%;
+}
+
+input.inputtext {
+  width: 10%;
+}
+
+img.showimg {
+  position: absolute;
+  left: 50%;
+  top: 70%;
+  transform: translate(-50%);
+  max-height: 30%;
+  max-width: 30%;
 }

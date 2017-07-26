@@ -1,31 +1,43 @@
 <!DOCTYPE html>
 <html>
 
-<head>
-  <link rel="stylesheet" type="text/css" href="/static/mystyle.css"> 
-  <meta charset="UTF-8">
-  <title>源氏のために勉強せよ！</title>
-</head>
+  <head>
+    <link rel="stylesheet" type="text/css" href="/static/mystyle.css">
+    <meta charset="UTF-8">
+    <title>源氏のために勉強せよ！</title>
+  </head>
 
-<div class="bg">
-</div>
+  <div class="bg">
+  </div>
 
-<body>
+  <body>
 
-  <h1>問題管理システム</h1>
+    <h1>問題管理システム</h1>
 
-  
 
-  <form id="form1" method="post" action="/api/upload" enctype="multipart/form-data">
-    <div class = "sub">
-    <p class="main">ファイルアップロード
-  </p>
-        <input id="File1" type="file" name="myfile"/>
+
+    <form id="form1" method="post" action="/api/upload" enctype="multipart/form-data">
+      <div class="sub">
+        <p class="main">ファイルアップロード
+        </p>
+        <input class="upfile" id="File1" type="file" name="qus" />
+        <input class="upfile" id="File2" type="file" name="ans" />
+        <select class="form-control" name="kamoku" id="manufacturer">
+          <option selected="selected">--問題の科目--</option>
+          <option>math</option>
+          <option>physical</option>
+          <option>chemistry</option>
+        </select>
+        得点:
+        <input class="inputtext" type="text" name="point" value="0">
         <input type="submit"></input>
-    </div>
-</form>
+      </div>
+    </form>
 
-</body>
+	<img class="showimg" src="{{ img_stream }}">  
+
+  </body>
+
 </html>
 
 <!--git add -A // To track all files

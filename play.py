@@ -31,6 +31,15 @@ def give():
 	except IOError:
 		print "没有答案图片"
 
+def search_qus():
+	"查找特定科目的问题并用来展示"
+	"返回图片路径"
+	qus = datas_to_issue(datas)			
+	imgname = qus.imgnum
+	#问题图片的地址
+	quspath = mypath + "\\" + "questiondata" + "\\" + imgname
+	return quspath
+
 def back(point):
 	"记录分数并返还问题图片"
 	qus.write_history(point)
