@@ -5,7 +5,7 @@ from myfunction import *
 
 dataname = "his.txt"
 #定义路径
-mypath = os.getcwd()
+mypath = "static"
 #读取数据
 datas = readfile(mypath, dataname)
 #计算新文件名编号

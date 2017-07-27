@@ -9,16 +9,16 @@ import shutil
 
 def readfile(mypath, filename):
 	"读取文件内数据"
-	filename = mypath + "\\" + filename
-	myfile=open(filename, "r")
+	filename = os.path.join(mypath, filename)
+	myfile=open(filename, "rb")
 	datas = pickle.load(myfile)
 	myfile.close()
 	return datas
 
 def writefile(mypath, filename, datas):
 	"向文件内写入"
-	filename = mypath + "\\" + filename
-	myfile = open(filename, "w")
+	filename = os.path.join(mypath, filename)
+	myfile = open(filename, "wb")
 	pickle.dump(datas, myfile)
 	myfile.close()
 
@@ -26,23 +26,23 @@ def move_file(mypath, fileder, newfileder, newname):
 	"获取等待文件夹的文件并改名放入归档文件夹"
 	"返回更改后文件名"
 	#获取图片文件名
-	if os.listdir(mypath + "\\" + fileder):
-		oldname = os.listdir(mypath + "\\" + fileder)[0]
+	if os.listdir( os.path.join(mypath, fileder) ):
+		oldname = os.listdir( os.path.join(mypath, fileder) )[0]
 		#获取图像后缀
 		imgtypeq = str.split(oldname,'.')[1]
 		#生成新文件名
 		newname = newname + '.' + imgtypeq
 		#切换工作目录
-		os.chdir(mypath + "\\" + fileder)
+		os.chdir(os.path.join(mypath, fileder))
 		#重命名
 		os.rename(oldname, newname)
 		#移动文件归档
-		shutil.move(mypath + "\\" + fileder + "\\" + newname, mypath + "\\" + newfileder) 
+		shutil.move(os.path.join(mypath, fileder, newname), os.path.join(mypath, newfileder)) 
 		return newname
 
 def get_big_number(mypath):
 	"获取问题文件夹里数值最大的文件名编号。如果没有文件则为0"
-	names = os.listdir(mypath + "\\questiondata")
+	names = os.listdir( os.path.join(mypath, "questiondata") )
 	maxnumber = 0
 	for name in names:
 		maxnumber = max(maxnumber, int(str.split(name,'.')[0]))

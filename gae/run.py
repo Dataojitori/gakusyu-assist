@@ -1,10 +1,8 @@
 # -*- coding:utf-8 -*-
 
-from werkzeug.utils import secure_filename
 from flask import Flask,render_template,jsonify,request,redirect,url_for
 import time
 import os
-import base64
 
 app = Flask(__name__)
 UPLOAD_FOLDER='questionwaiting'
@@ -19,7 +17,8 @@ from myfunction import *
 
 dataname = "his.txt"
 #定义路径
-mypath = os.getcwd() + "\\static"
+#mypath = os.getcwd() + "\\static"
+mypath = "static"
 #读取数据
 datas = readfile(mypath, dataname)
 #计算新文件名编号
@@ -28,20 +27,6 @@ datas = readfile(mypath, dataname)
 # 用于判断文件后缀
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.',1)[1] in ALLOWED_EXTENSIONS
-
-def return_img_stream(img_local_path):  
-    """ 
-    工具函数: 
-    获取本地图片流 
-    :param img_local_path:文件单张图片的本地绝对路径 
-    :return: 图片流 
-    """  
-    import base64  
-    img_stream = ''  
-    with open(img_local_path, 'r') as img_f:  
-        img_stream = img_f.read()  
-        img_stream = base64.b64encode(img_stream)  
-    return img_stream  
 
 @app.route('/')  
 def hello_world():  
@@ -120,6 +105,6 @@ def back(point):
 	writefile(mypath, dataname, datas)
 
 
-print basedir
+
 if __name__ == '__main__':
     app.run(debug=True)

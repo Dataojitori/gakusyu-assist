@@ -4,13 +4,17 @@ from werkzeug.utils import secure_filename
 from flask import Flask,render_template,jsonify,request,redirect,url_for
 import time
 import os
-import base64
 
 app = Flask(__name__)
+MainPath = 'static'
+app.config['MainPath'] = MainPath
+
 UPLOAD_FOLDER='questionwaiting'
 UPLOAD_FOLDER2='answerwaiting'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['UPLOAD_FOLDER2'] = UPLOAD_FOLDER2
+QUS_folder = '\static\questiondata'
+app.config['QUS_folder'] = QUS_folder
 basedir = os.path.abspath(os.path.dirname(__file__))
 ALLOWED_EXTENSIONS = set(['txt','png','jpg','JPG','PNG','gif','GIF'])
 #----------------------------------------------------------------------------------
@@ -19,29 +23,19 @@ from myfunction import *
 
 dataname = "his.txt"
 #定义路径
-mypath = os.getcwd() + "\\static"
+#mypath = os.path.join(os.path.dirname(__file__), "static")
+mypath = app.config['MainPath']
 #读取数据
+#datas = readfile(os.path.dirname(__file__), dataname)
 datas = readfile(mypath, dataname)
 #计算新文件名编号
 #----------------------------------------------------------------------------------
+
 
 # 用于判断文件后缀
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.',1)[1] in ALLOWED_EXTENSIONS
 
-def return_img_stream(img_local_path):  
-    """ 
-    工具函数: 
-    获取本地图片流 
-    :param img_local_path:文件单张图片的本地绝对路径 
-    :return: 图片流 
-    """  
-    import base64  
-    img_stream = ''  
-    with open(img_local_path, 'r') as img_f:  
-        img_stream = img_f.read()  
-        img_stream = base64.b64encode(img_stream)  
-    return img_stream  
 
 @app.route('/')  
 def hello_world():  
@@ -96,7 +90,8 @@ def search_qus():
 	qus = datas_to_issue(datas)			
 	imgname = qus.imgnum
 	#问题图片的地址
-	quspath = "/static/questiondata/" + imgname
+	#quspath = os.path.join(mypath, "questiondata", imgname)
+	quspath = os.path.join(app.config['QUS_folder'], imgname)
 	return quspath
 	
 def give():
@@ -105,9 +100,9 @@ def give():
 	global qus
 	qus = datas_to_issue(datas)			
 	imgname = qus.imgnum
-	shutil.move(mypath + "\\" + "questiondata" + "\\" + imgname, mypath + "\\" + "questionwaiting") 
+	shutil.move(os.path.join(mypath, "questiondata", imgname),os.path.join(mypath, "questionwaiting"))                    
 	try :
-		shutil.move(mypath + "\\" + "answerdata" + "\\" + imgname, mypath + "\\" + "answerwaiting") 
+		shutil.move(os.path.join(mypath, "answerdata", imgname), os.path.join(mypath, "answerwaiting"))
 	except IOError:
 		print "没有答案图片"
 
@@ -115,11 +110,11 @@ def back(point):
 	"记录分数并返还问题图片"
 	qus.write_history(point)
 	imgname = qus.imgnum
-	shutil.move(mypath + "\\" + "questionwaiting" + "\\" + imgname, mypath + "\\" + "questiondata") 
-	shutil.move(mypath + "\\" + "answerwaiting" + "\\" + imgname, mypath + "\\" + "answerdata") 
+	shutil.move(os.path.join(mypath, "questionwaiting", imgname),os.path.join(mypath, "questiondata")) 
+	shutil.move(os.path.join(mypath, "answerwaiting", imgname), os.path.join(mypath, "answerdata")) 
 	writefile(mypath, dataname, datas)
 
 
-print basedir
+print search_qus()
 if __name__ == '__main__':
     app.run(debug=True)
