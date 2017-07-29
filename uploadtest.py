@@ -65,7 +65,8 @@ def api_upload():
 		f=request.files['qus']  # 从表单的file字段获取文件，myfile为该表单的name值
 		f2=request.files['ans']
 		if f and allowed_file(f.filename):  # 判断是否是允许上传的文件类型
-			f.save(os.path.join(file_dir,f.filename))  #保存文件到upload目录
+			return os.path.join(file_dir,f.filename)
+			#f.save(os.path.join(file_dir,f.filename))  #保存文件到upload目录
 			if f2 and allowed_file(f2.filename):#如果有答案图片
 				f2.save(os.path.join(file2_dir,f2.filename)) 
 			

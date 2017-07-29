@@ -9,8 +9,8 @@ app = Flask(__name__)
 MainPath = 'static'
 app.config['MainPath'] = MainPath
 
-UPLOAD_FOLDER='questionwaiting'
-UPLOAD_FOLDER2='answerwaiting'
+UPLOAD_FOLDER='static/questiondata'
+UPLOAD_FOLDER2='static/answerdata'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['UPLOAD_FOLDER2'] = UPLOAD_FOLDER2
 QUS_folder = '\static\questiondata'
@@ -23,10 +23,8 @@ from myfunction import *
 
 dataname = "his.txt"
 #定义路径
-#mypath = os.path.join(os.path.dirname(__file__), "static")
 mypath = app.config['MainPath']
 #读取数据
-#datas = readfile(os.path.dirname(__file__), dataname)
 datas = readfile(mypath, dataname)
 #计算新文件名编号
 #----------------------------------------------------------------------------------
@@ -51,22 +49,26 @@ def api_upload():
 		return render_template('index.html', img_stream=img_stream)
 
 	elif request.method == 'POST':
-		file_dir = mypath + "\\questionwaiting"
-		file2_dir = mypath + "\\answerwaiting"
-		#file_dir=os.path.join(basedir,app.config['UPLOAD_FOLDER'])
-		#file2_dir=os.path.join(basedir,app.config['UPLOAD_FOLDER2'])
+		qus_dir = os.path.join( mypath, "questionwaiting")
+		ans_dir = os.path.join( mypath, "answerwaiting")		
 		
-		f=request.files['qus']  # 从表单的file字段获取文件，myfile为该表单的name值
-		f2=request.files['ans']
-		if f and allowed_file(f.filename):  # 判断是否是允许上传的文件类型
-			f.save(os.path.join(file_dir,f.filename))  #保存文件到upload目录
-			if f2 and allowed_file(f2.filename):#如果有答案图片
-				f2.save(os.path.join(file2_dir,f2.filename)) 
+		qus_img=request.files['qus']  # 从表单的file字段获取文件，myfile为该表单的name值
+		ans_img=request.files['ans']
+		if qus_img and allowed_file(qus_img.filename):  # 判断是否是允许上传的文件类型
+			#生成新文件名
+			namenum = get_big_number(mypath) + 1			
+			imgtypeq = qus_img.filename.rsplit('.',1)[1]					
+			newname = str(namenum) + '.' + imgtypeq
+			#保存问题文件到questiondata
+			qus_img.save( os.path.join(app.config['UPLOAD_FOLDER'] ,newname) ) 
+			
+			if ans_img and allowed_file(ans_img.filename):#如果有答案图片
+				ans_img.save( os.path.join(app.config['UPLOAD_FOLDER2'] ,newname) ) 
 			
 			tag = request.values.get("kamoku") #问题标签.数学物理化学
 			point = float(request.values.get("point"))
 			#开始主程序
-			new(point, tag)
+			#new(point, tag)
 			
 			img_stream = search_qus()
 			return render_template('index.html', img_stream=img_stream)
