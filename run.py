@@ -67,8 +67,9 @@ def api_upload():
 			
 			tag = request.values.get("kamoku") #问题标签.数学物理化学
 			point = float(request.values.get("point"))
+			memo = str(request.values.get("memo"))#笔记
 			#开始主程序
-			#new(point, tag)
+			new(point, memo, namenum, tag, newname)
 			
 			img_stream = search_qus()
 			return render_template('index.html', img_stream=img_stream)
@@ -76,14 +77,18 @@ def api_upload():
 			return jsonify({"errno":1001,"errmsg":"上传失败"})
 #----------------------------------------------------------------------------------
 
-def new(point, tag = None):
-	"新建一个问题并写入得分"
-	maxnum = get_big_number(mypath) + 1
+def new(point, memo, number, tag = None, newname=None):
+	"新建一个问题并写入得分"	
 	global qus
-	qus = make_question(mypath, datas) #一个问题类对象
+	qus = make_question(mypath, datas, number) #一个问题类对象
 	qus.write_history(point)
 	if tag :
 		qus.tag.append(str(tag))
+	if memo != "0":
+		qus.memo.append(memo)
+	if newname :
+            #如果给了文件名就重新命名
+            qus.imgnum = str(newname)
 	writefile(mypath, dataname, datas)
 
 def search_qus():
@@ -119,4 +124,5 @@ def back(point):
 
 print search_qus()
 if __name__ == '__main__':
-    app.run(debug=True)
+    #app.run(debug=True)
+    app.run(host='0.0.0.0',debug=True)

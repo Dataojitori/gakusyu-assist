@@ -18,7 +18,7 @@ def readfile(mypath, filename):
 def writefile(mypath, filename, datas):
 	"向文件内写入"
 	filename = os.path.join(mypath, filename)
-	myfile = open(filename, "w")
+	myfile = open(filename, "wb")
 	pickle.dump(datas, myfile)
 	myfile.close()
 
@@ -48,17 +48,16 @@ def get_big_number(mypath):
 		maxnumber = max(maxnumber, int(str.split(name,'.')[0]))
 	return maxnumber
 
-def make_question(mypath, datas, number=None):
+def make_question(mypath, datas, number = None):
 	"获取或生成问题对象"
-	if datas.get(number):#如果是已存在的问题
+	if number:#如果是已存在的问题
 		question = datas.get(number)
 	else :
-                if not number:
-                        #计算配给编号
-                        number = get_big_number(mypath) + 1                                     
-                #归档文件
-                newname = move_file(mypath, "questionwaiting", "questiondata", str(number))
-                move_file(mypath, "answerwaiting", "answerdata", str(number))
+		#计算配给编号
+		number = get_big_number(mypath) + 1
+		#归档文件
+		newname = move_file(mypath, "questionwaiting", "questiondata", str(number))
+		move_file(mypath, "answerwaiting", "answerdata", str(number))
 		#生成新类
 		question = mondai(newname)
 		datas[number] = question
