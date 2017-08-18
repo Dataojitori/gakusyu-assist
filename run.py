@@ -54,7 +54,7 @@ def api_upload():
 		
 		qus_img=request.files['qus']  # 从表单的file字段获取文件，myfile为该表单的name值
 		ans_img=request.files['ans']
-		if qus_img and allowed_file(qus_img.filename):  # 判断是否是允许上传的文件类型
+		if qus_img :#and allowed_file(qus_img.filename):  # 判断是否是允许上传的文件类型
 			#生成新文件名
 			namenum = get_big_number(mypath) + 1			
 			imgtypeq = qus_img.filename.rsplit('.',1)[1]					
