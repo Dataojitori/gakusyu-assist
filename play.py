@@ -16,14 +16,24 @@ def onekilled_a_qus():
 	#存档
 	writefile(mypath, "data.txt", sysdatas)
 
-def what_is_hp():
-	#每多一道题库+1hp.每初次做对一道题+1hp
-	hp = len(datas) + sysdatas["onekill"]	
-	#随着时间经过-hp
-	hp -= (time.time() - sysdatas["starttime"])/3600
-	#根据目前题库的理解度+hp
+def what_is_progress(rate = False):
+	"进度如何.返回题库数量+理解度+一次做对数"
+	#每多一道题库+1分.每初次做对一道题+1分
+	score = len(datas) + sysdatas["onekill"]	
+	#+总理解度
 	points = map(lambda q :q.understand, datas.values())	
-	hp += sum(points)
+	score += sum(points)
+	if rate :
+		if score < 500 :
+			progress = score / 500. * 100
+			return round(progress, 2)
+	else :
+		return round(score, 2)
+
+def what_is_hp():
+	score = what_is_progress()
+	#随着时间经过-hp
+	hp = score - (time.time() - sysdatas["starttime"])/3600
 	return round(hp, 2)
 
 def new(point, tag = None):

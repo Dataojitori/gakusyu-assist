@@ -41,9 +41,10 @@ def hello_world():
     img_stream = search_qus()	
     hp = what_is_hp()
     onekill = sysdatas["onekill"]
+    progress = what_is_progress(rate = True)
 
     return render_template('index.html',  
-                           img_stream=img_stream, hp = hp, onekill = onekill)  
+                           img_stream=img_stream, hp = hp, onekill = onekill, progress = progress)  
 
 # 上传文件
 @app.route('/api/upload',methods=['GET', 'POST'],strict_slashes=False)
