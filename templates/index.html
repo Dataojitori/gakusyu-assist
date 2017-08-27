@@ -18,8 +18,9 @@
 
     <form id="form1" method="post" action="/api/upload" enctype="multipart/form-data">
       <div class="sub">
-        <p class="main">ファイルアップロード
+        <p class="main">HP: {{hp}},  初答正确数: {{onekill}}
         </p>
+		
         <input class="upfile" id="File1" type="file" name="qus" />
         <input class="upfile" id="File2" type="file" name="ans" />
         <select class="form-control" name="kamoku" id="manufacturer">
@@ -33,7 +34,10 @@
         <input class="inputtext" type="text" name="point" value="0">
 		memo:
         <input class="inputtext" type="text" name="memo" value="0">
-        <input type="submit"></input>
+        <input type="submit" name = "button" value = "imgupload" ></input>
+		<br>
+		初答正确
+		<input type="submit" name = "button" value = "onekill" id="onekillButton" />
       </div>
     </form>
 

@@ -24,7 +24,7 @@ def what_is_hp():
 	#根据目前题库的理解度+hp
 	points = map(lambda q :q.understand, datas.values())	
 	hp += sum(points)
-	return round(hp, 1)
+	return round(hp, 2)
 
 def new(point, tag = None):
 	"新建一个问题并写入得分"

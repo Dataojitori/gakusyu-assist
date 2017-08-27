@@ -39,8 +39,11 @@ def allowed_file(filename):
 @app.route('/')  
 def hello_world():  
     img_stream = search_qus()	
+    hp = what_is_hp()
+    onekill = sysdatas["onekill"]
+
     return render_template('index.html',  
-                           img_stream=img_stream)  
+                           img_stream=img_stream, hp = hp, onekill = onekill)  
 
 # 上传文件
 @app.route('/api/upload',methods=['GET', 'POST'],strict_slashes=False)
@@ -53,27 +56,32 @@ def api_upload():
 		qus_dir = os.path.join( mypath, "questionwaiting")
 		ans_dir = os.path.join( mypath, "answerwaiting")		
 		
-		qus_img=request.files['qus']  # 从表单的file字段获取文件，myfile为该表单的name值
-		ans_img=request.files['ans']
-		if qus_img :#and allowed_file(qus_img.filename):  # 判断是否是允许上传的文件类型
-			#生成新文件名
-			namenum = get_big_number(mypath) + 1			
-			imgtypeq = qus_img.filename.rsplit('.',1)[1]					
-			newname = str(namenum) + '.' + imgtypeq
-			#保存问题文件到questiondata
-			qus_img.save( os.path.join(app.config['UPLOAD_FOLDER'] ,newname) ) 
-			
-			if ans_img and allowed_file(ans_img.filename):#如果有答案图片
-				ans_img.save( os.path.join(app.config['UPLOAD_FOLDER2'] ,newname) ) 
-			
-			tag = request.values.get("kamoku") #问题标签.数学物理化学
-			point = float(request.values.get("point"))
-			memo = str(request.values.get("memo"))#笔记
-			#开始主程序
-			new(point, memo, namenum, tag, newname)
-			
-			img_stream = search_qus()
-			return render_template('index.html', img_stream=img_stream)
+		if request.form["button"] == "imgupload":
+			qus_img=request.files['qus']  # 从表单的file字段获取文件，myfile为该表单的name值
+			ans_img=request.files['ans']
+			if qus_img :#and allowed_file(qus_img.filename):  # 判断是否是允许上传的文件类型
+				#生成新文件名
+				namenum = get_big_number(mypath) + 1			
+				imgtypeq = qus_img.filename.rsplit('.',1)[1]					
+				newname = str(namenum) + '.' + imgtypeq
+				#保存问题文件到questiondata
+				qus_img.save( os.path.join(app.config['UPLOAD_FOLDER'] ,newname) ) 
+				
+				if ans_img and allowed_file(ans_img.filename):#如果有答案图片
+					ans_img.save( os.path.join(app.config['UPLOAD_FOLDER2'] ,newname) ) 
+				
+				tag = request.values.get("kamoku") #问题标签.数学物理化学
+				point = float(request.values.get("point"))
+				memo = str(request.values.get("memo"))#笔记
+				#开始主程序
+				new(point, memo, namenum, tag, newname)
+				
+				img_stream = search_qus()
+				return render_template('index.html', img_stream=img_stream, score = score)
+		elif request.form["button"] == "onekill":
+			#初次做对了一道题
+			onekilled_a_qus()
+			return hello_world()			
 		else:
 			return jsonify({"errno":1001,"errmsg":"上传失败"})
 #----------------------------------------------------------------------------------
