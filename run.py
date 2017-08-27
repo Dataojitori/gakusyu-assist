@@ -20,13 +20,14 @@ ALLOWED_EXTENSIONS = set(['txt','png','jpg','JPG','PNG','gif','GIF'])
 #----------------------------------------------------------------------------------
 #主程序部分
 from myfunction import *
+from play import *
 
 dataname = "his.txt"
 #定义路径
 mypath = app.config['MainPath']
 #读取数据
 datas = readfile(mypath, dataname)
-#计算新文件名编号
+sysdatas = readfile(mypath, "data.txt")
 #----------------------------------------------------------------------------------
 
 

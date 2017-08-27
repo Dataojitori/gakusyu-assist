@@ -8,7 +8,24 @@ dataname = "his.txt"
 mypath = "static"
 #读取数据
 datas = readfile(mypath, dataname)
-#计算新文件名编号
+sysdatas = readfile(mypath, "data.txt")
+
+def onekilled_a_qus():
+	"当初次做对一道题时.在sysdatas记录初答正确数"
+	sysdatas["onekill"] += 1
+	#存档
+	writefile(mypath, "data.txt", sysdatas)
+
+def what_is_hp():
+	#每多一道题库+1hp.每初次做对一道题+1hp
+	hp = len(datas) + sysdatas["onekill"]	
+	#随着时间经过-hp
+	hp -= (time.time() - sysdatas["starttime"])/3600
+	#根据目前题库的理解度+hp
+	points = map(lambda q :q.understand, datas.values())	
+	hp += sum(points)
+	return round(hp, 1)
+
 def new(point, tag = None):
 	"新建一个问题并写入得分"
 	maxnum = get_big_number(mypath) + 1
