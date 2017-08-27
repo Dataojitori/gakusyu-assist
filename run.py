@@ -72,28 +72,31 @@ def api_upload():
 					ans_img.save( os.path.join(app.config['UPLOAD_FOLDER2'] ,newname) ) 
 				
 				tag = request.values.get("kamoku") #问题标签.数学物理化学
+				containqus = request.values.get("containqus")
 				point = float(request.values.get("point"))
 				memo = str(request.values.get("memo"))#笔记
 				#开始主程序
-				new(point, memo, namenum, tag, newname)
+				new(point, memo, namenum, tag, newname, containqus)
+				return hello_world()	
 				
-				img_stream = search_qus()
-				return render_template('index.html', img_stream=img_stream, score = score)
 		elif request.form["button"] == "onekill":
 			#初次做对了一道题
-			onekilled_a_qus()
+			num = request.values.get("onekillnum")
+			onekilled_a_qus(sysdatas, int(num))
 			return hello_world()			
 		else:
 			return jsonify({"errno":1001,"errmsg":"上传失败"})
 #----------------------------------------------------------------------------------
 
-def new(point, memo, number, tag = None, newname=None):
+def new(point, memo, number, tag = None, newname=None, containqus =None):
 	"新建一个问题并写入得分"	
 	global qus
 	qus = make_question(mypath, datas, number) #一个问题类对象
 	qus.write_history(point)
 	if tag :
 		qus.tag.append(str(tag))
+	if containqus :
+		qus.qusnum = int(containqus)
 	if memo != "0":
 		qus.memo.append(memo)
 	if newname :

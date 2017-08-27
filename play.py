@@ -10,9 +10,9 @@ mypath = "static"
 datas = readfile(mypath, dataname)
 sysdatas = readfile(mypath, "data.txt")
 
-def onekilled_a_qus():
+def onekilled_a_qus(sysdatas, num):
 	"当初次做对一道题时.在sysdatas记录初答正确数"
-	sysdatas["onekill"] += 1
+	sysdatas["onekill"] += num
 	#存档
 	writefile(mypath, "data.txt", sysdatas)
 
@@ -33,7 +33,7 @@ def what_is_progress(rate = False):
 def what_is_hp():
 	score = what_is_progress()
 	#随着时间经过-hp
-	hp = score - (time.time() - sysdatas["starttime"])/3600
+	hp = score - (time.time() - sysdatas["starttime"])/1800
 	return round(hp, 2)
 
 def new(point, tag = None):

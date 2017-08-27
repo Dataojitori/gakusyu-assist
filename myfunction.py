@@ -86,6 +86,7 @@ class mondai:
 		self.lasttime = 0. #♥最后一次学习的时间，单位为1970以来的秒
 		self.understand = 0. #♥理解度,0~正无穷
 		self.remember = 0. #记忆度,0~1.不需要保存,即用即算
+		self.qusnum = 0#所包含的问题个数
 
 	def write_memo(self, memo):
 		"记录文字笔记"
