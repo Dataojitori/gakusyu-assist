@@ -39,10 +39,9 @@ def allowed_file(filename):
 @app.route('/')  
 def hello_world():  
     img_stream = search_qus()	
-    hp = what_is_hp()
+    hp = what_is_hp(sysdatas)
     onekill = sysdatas["onekill"]
-    progress = what_is_progress(rate = True)
-
+    progress = what_is_progress(sysdatas, rate = True)
     return render_template('index.html',  
                            img_stream=img_stream, hp = hp, onekill = onekill, progress = progress)  
 
@@ -83,7 +82,12 @@ def api_upload():
 			#初次做对了一道题
 			num = request.values.get("onekillnum")
 			onekilled_a_qus(sysdatas, int(num))
-			return hello_world()			
+			return hello_world()		
+		elif request.form["button"] == "readnovel":
+			#读小说
+			read_chapter(sysdatas, 1)
+			print "已读小说章节".decode('utf-8').encode('gbk'), sysdatas["novel"]
+			return hello_world()	
 		else:
 			return jsonify({"errno":1001,"errmsg":"上传失败"})
 #----------------------------------------------------------------------------------

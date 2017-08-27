@@ -16,7 +16,12 @@ def onekilled_a_qus(sysdatas, num):
 	#存档
 	writefile(mypath, "data.txt", sysdatas)
 
-def what_is_progress(rate = False):
+def read_chapter(sysdatas, num):
+	sysdatas["novel"] += num
+	#存档
+	writefile(mypath, "data.txt", sysdatas)
+
+def what_is_progress(sysdatas, rate = False):
 	"进度如何.返回题库数量+理解度+一次做对数"
 	#每多一道题库+1分.每初次做对一道题+1分
 	score = len(datas) + sysdatas["onekill"]	
@@ -30,10 +35,11 @@ def what_is_progress(rate = False):
 	else :
 		return round(score, 2)
 
-def what_is_hp():
-	score = what_is_progress()
+def what_is_hp(sysdatas):
+	score = what_is_progress(sysdatas)
 	#随着时间经过-hp
 	hp = score - (time.time() - sysdatas["starttime"])/1800
+	hp -= sysdatas["novel"]*2
 	return round(hp, 2)
 
 def new(point, tag = None):
