@@ -42,6 +42,7 @@ def hello_world():
     hp = what_is_hp(sysdatas)
     onekill = sysdatas["onekill"]
     progress = what_is_progress(sysdatas, rate = True)
+    print "进度".decode('utf-8').encode('gbk'), what_is_progress(sysdatas)
     return render_template('index.html',  
                            img_stream=img_stream, hp = hp, onekill = onekill, progress = progress)  
 
@@ -87,7 +88,11 @@ def api_upload():
 			#读小说
 			read_chapter(sysdatas, 1)
 			print "已读小说章节".decode('utf-8').encode('gbk'), sysdatas["novel"]
-			return hello_world()	
+			return hello_world()
+		elif request.form["button"] == "quizlet":
+			work_on_quizlet(sysdatas)
+			print "已完成quizlet回数".decode('utf-8').encode('gbk'), sysdatas["quizlet"]
+			return hello_world()
 		else:
 			return jsonify({"errno":1001,"errmsg":"上传失败"})
 #----------------------------------------------------------------------------------

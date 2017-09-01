@@ -21,18 +21,23 @@ def read_chapter(sysdatas, num):
 	#存档
 	writefile(mypath, "data.txt", sysdatas)
 
+def work_on_quizlet(sysdatas):
+	sysdatas["quizlet"] += 1
+	writefile(mypath, "data.txt", sysdatas)
+
 def what_is_progress(sysdatas, rate = False):
 	"进度如何.返回题库数量+理解度+一次做对数"
 	#每多一道题库+1分.每初次做对一道题+1分
-	score = len(datas) + sysdatas["onekill"]	
-	#+总理解度
-	points = map(lambda q :q.understand, datas.values())	
-	score += sum(points)
+	score = len(datas) + sysdatas["onekill"]		
 	if rate :
 		if score < 500 :
 			progress = score / 500. * 100
 			return round(progress, 2)
 	else :
+		#+总理解度
+		points = map(lambda q :q.understand, datas.values())	
+		score += sum(points)
+		score += sysdatas["quizlet"]
 		return round(score, 2)
 
 def what_is_hp(sysdatas):
