@@ -1,7 +1,7 @@
 (dp0
 S'onekill'
 p1
-I37
+I206
 sS'quizlet'
 p2
 I0

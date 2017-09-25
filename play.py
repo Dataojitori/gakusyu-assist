@@ -10,6 +10,9 @@ mypath = "static"
 datas = readfile(mypath, dataname)
 sysdatas = readfile(mypath, "data.txt")
 
+def save():
+        writefile(mypath, dataname, datas)
+        
 def onekilled_a_qus(sysdatas, num):
 	"当初次做对一道题时.在sysdatas记录初答正确数"
 	sysdatas["onekill"] += num
