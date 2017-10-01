@@ -31,6 +31,13 @@ def work_on_quizlet(sysdatas):
 def what_is_progress(sysdatas, rate = False):
 	"进度如何.返回题库数量+理解度+一次做对数"
 	#每多一道题库+1分.每初次做对一道题+1分
+	def contain(qus):
+		try :
+			c = qus.qusnum
+		except AttributeError:
+			c = 1
+		return c
+
 	score = len(datas) + sysdatas["onekill"]		
 	if rate :
 		if score < 500 :
@@ -38,7 +45,7 @@ def what_is_progress(sysdatas, rate = False):
 			return round(progress, 2)
 	else :
 		#+总理解度
-		points = map(lambda q :q.understand, datas.values())	
+		points = map(lambda q :q.understand * contain(q), datas.values())	
 		score += sum(points)
 		score += sysdatas["quizlet"]
 		return round(score, 2)

@@ -58,15 +58,22 @@ def give_me_qus():
     #global qus
     #qus = datas_to_issue(datas)			
     time.sleep(0.1)
-    img_stream = os.path.join(app.config['Qwating_folder'], qus.imgnum)
-    return render_template('oldqus.html', img_stream=img_stream)  
+    img_stream = os.path.join(app.config['Qwating_folder'], qus.imgnum)    
+    try :
+    	contain = qus.qusnum
+    except AttributeError:
+    	qus.qusnum = 0
+    return render_template('oldqus.html', img_stream=img_stream, contain = qus.qusnum, tag = qus.tag)  
 
 @app.route('/old_ans')  
-def give_me_ans():
-    #qus = datas_to_issue(datas)			
+def give_me_ans():			
     memo = qus.memo
     img_stream = os.path.join(app.config['Awating_folder'], qus.imgnum)    
-    return render_template('oldans.html', img_stream=img_stream, memo = memo)  
+    try :
+    	contain = qus.qusnum
+    except AttributeError:
+    	qus.qusnum = 0
+    return render_template('oldans.html', img_stream=img_stream, memo = memo, contain = qus.qusnum, tag = qus.tag)  
 
 # 上传文件
 @app.route('/api/upload',methods=['GET', 'POST'],strict_slashes=False)
@@ -123,23 +130,21 @@ def api_upload2():
 	elif request.method == 'POST':		
 		if request.form["button"] == "show_answer":			
 			return give_me_ans()					
-		elif request.form["button"] == "dataupload":			
-			#qus = datas_to_issue(datas)			
+		elif request.form["button"] == "dataupload":					
 			#获取表单
 			point = float(request.values.get("point"))
-			memo = str(request.values.get("memo"))			
+			contain = int(request.values.get("contain"))				
 			#记录
-			#qus.write_history(point)#记录history
-			if memo != "0":
+			qus.write_history(point)#记录history
+			if qus.qusnum == 0:
 				print "0000000000"
-       			#qus.memo.append(memo)#记录memo
+				qus.qusnum = contain#记录memo
 			imgname = qus.imgnum
 			shutil.move(mypath + "\\" + "questionwaiting" + "\\" + imgname, mypath + "\\" + "questiondata") 
-			if os.path.isfile(mypath + "\\" + "answerwaiting" + "\\" + imgname):	
-				#move_file(mypath, Awating_folder, ANS_folder, imgname, use_old_name = True)				
+			if os.path.isfile(mypath + "\\" + "answerwaiting" + "\\" + imgname):					
 				shutil.move(mypath + "\\" + "answerwaiting" + "\\" + imgname, mypath + "\\" + "answerdata") 
 			#写文件
-			#writefile(mypath, dataname, datas)
+			writefile(mypath, dataname, datas)
 			return hello_world()		
 		else:
 			return jsonify({"errno":1001,"errmsg":"上传失败"})
@@ -154,7 +159,7 @@ def new(point, memo, number, tag = None, newname=None, containqus =None):
         if containqus :
             qus.qusnum = int(containqus)
         if memo != "0":
-            qus.memo.append(memo)
+            qus.write_memo(memo)
         if newname :
             #如果给了文件名就重新命名
             qus.imgnum = str(newname)

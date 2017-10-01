@@ -93,7 +93,7 @@ class mondai:
 
 	def write_memo(self, memo):
 		"记录文字笔记"
-		self.memo.append([self.lasttime, self.wordtime, memo])
+		self.memo.append([self.wordtime, memo])
 
 	def whatis_remenber(self):
 		"返回现在的记忆程度百分比"
