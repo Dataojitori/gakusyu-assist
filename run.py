@@ -14,6 +14,9 @@ UPLOAD_FOLDER2='static/answerdata'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['UPLOAD_FOLDER2'] = UPLOAD_FOLDER2
 QUS_folder = '\static\questiondata'
+ANS_folder = '\static\answerdata'
+Qwating_folder = '\static\questionwaiting'
+Awating_folder = '\static\answerwaiting'
 app.config['QUS_folder'] = QUS_folder
 basedir = os.path.abspath(os.path.dirname(__file__))
 ALLOWED_EXTENSIONS = set(['txt','png','jpg','JPG','PNG','gif','GIF'])
@@ -45,6 +48,19 @@ def hello_world():
     print "进度".decode('utf-8').encode('gbk'), what_is_progress(sysdatas)
     return render_template('index.html',  
                            img_stream=img_stream, hp = hp, onekill = onekill, progress = progress)  
+						   
+@app.route('/old_qus')  
+def give_me_qus():
+    give()    
+    time.sleep(1)
+    img_stream = os.path.join(app.config['Qwating_folder'], qus.imgname)
+    return render_template('oldqus.html', img_stream=img_stream)  
+
+@app.route('/old_ans')  
+def give_me_ans():
+    #imgname = os.listdir( os.path.join(mypath, fileder) )[0]
+    img_stream = search_qus()
+    return render_template('oldans.html', img_stream=img_stream)  
 
 # 上传文件
 @app.route('/api/upload',methods=['GET', 'POST'],strict_slashes=False)
@@ -83,39 +99,46 @@ def api_upload():
 			#初次做对了一道题
 			num = request.values.get("onekillnum")
 			onekilled_a_qus(sysdatas, int(num))
-			return hello_world()		
-		elif request.form["button"] == "readnovel":
-			#读小说
-			read_chapter(sysdatas, 1)
-			print "已读小说章节".decode('utf-8').encode('gbk'), sysdatas["novel"]
-			return hello_world()
+			return hello_world()				
 		elif request.form["button"] == "quizlet":
 			work_on_quizlet(sysdatas)
 			print "已完成quizlet回数".decode('utf-8').encode('gbk'), sysdatas["quizlet"]
 			return hello_world()
+		elif request.form["button"] == "old":					
+			return give_me_qus()
+		else:
+			return jsonify({"errno":1001,"errmsg":"上传失败"})
+
+@app.route('/api/upload2',methods=['GET', 'POST'],strict_slashes=False)
+def api_upload2():
+	if request.method == 'GET':
+		give_me_qus()
+
+	elif request.method == 'POST':		
+		if request.form["button"] == "show_answer":			
+			return give_me_ans()						
 		else:
 			return jsonify({"errno":1001,"errmsg":"上传失败"})
 #----------------------------------------------------------------------------------
 
 def new(point, memo, number, tag = None, newname=None, containqus =None):
-	"新建一个问题并写入得分"	
-	global qus
-	qus = make_question(mypath, datas, number) #一个问题类对象
-	qus.write_history(point)
-	if tag :
-		qus.tag.append(str(tag))
-	if containqus :
-		qus.qusnum = int(containqus)
-	if memo != "0":
-		qus.memo.append(memo)
-	if newname :
+        "新建一个问题并写入得分"	
+        qus = make_question(mypath, datas, number) #一个问题类对象
+        qus.write_history(point)
+        if tag :
+            qus.tag.append(str(tag))
+        if containqus :
+            qus.qusnum = int(containqus)
+        if memo != "0":
+            qus.memo.append(memo)
+        if newname :
             #如果给了文件名就重新命名
             qus.imgnum = str(newname)
-	writefile(mypath, dataname, datas)
+        writefile(mypath, dataname, datas)
 
 def search_qus():
 	"查找特定科目的问题并用来展示"
-	"返回图片路径"
+	"返回图片路径"	
 	qus = datas_to_issue(datas)			
 	imgname = qus.imgnum
 	#问题图片的地址
@@ -135,13 +158,7 @@ def give():
 	except IOError:
 		print "没有答案图片"
 
-def back(point):
-	"记录分数并返还问题图片"
-	qus.write_history(point)
-	imgname = qus.imgnum
-	shutil.move(os.path.join(mypath, "questionwaiting", imgname),os.path.join(mypath, "questiondata")) 
-	shutil.move(os.path.join(mypath, "answerwaiting", imgname), os.path.join(mypath, "answerdata")) 
-	writefile(mypath, dataname, datas)
+
 
 
 print search_qus()
