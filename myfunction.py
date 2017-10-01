@@ -22,7 +22,7 @@ def writefile(mypath, filename, datas):
 	pickle.dump(datas, myfile)
 	myfile.close()
 
-def move_file(mypath, fileder, newfileder, newname):
+def move_file(mypath, fileder, newfileder, newname, use_old_name = False):
 	"获取等待文件夹的文件并改名放入归档文件夹"
 	"返回更改后文件名"
 	#获取图片文件名
@@ -31,7 +31,10 @@ def move_file(mypath, fileder, newfileder, newname):
 		#获取图像后缀
 		imgtypeq = str.split(oldname,'.')[1]
 		#生成新文件名
-		newname = newname + '.' + imgtypeq
+		if use_old_name == True :
+			newname = newname
+		else :
+			newname = newname + '.' + imgtypeq
 		#切换工作目录
 		os.chdir(os.path.join(mypath, fileder))
 		#重命名

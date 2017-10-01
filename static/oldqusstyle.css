@@ -15,16 +15,17 @@ body {
 }
 
 img.showimg {
-  width:80vw; 
-  position: absolute;
+  max-width: 80vw;
+  position: relative;
   left: 50%;
-  top: 10%;
   transform: translate(-50%);
 }
 
 .frame {
+  z-index:999;
+  top: 10%;
   left: 50%;
   position: absolute;  
-  transform: translate(-50%, -50%);
+  transform: translate(-50%);
   text-align: center;
 }

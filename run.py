@@ -14,10 +14,13 @@ UPLOAD_FOLDER2='static/answerdata'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['UPLOAD_FOLDER2'] = UPLOAD_FOLDER2
 QUS_folder = '\static\questiondata'
-ANS_folder = '\static\answerdata'
+ANS_folder = "\\static\\answerdata"
 Qwating_folder = '\static\questionwaiting'
-Awating_folder = '\static\answerwaiting'
+Awating_folder = '/static/answerwaiting'
 app.config['QUS_folder'] = QUS_folder
+app.config['ANS_folder'] = ANS_folder
+app.config['Qwating_folder'] = Qwating_folder
+app.config['Awating_folder'] = Awating_folder
 basedir = os.path.abspath(os.path.dirname(__file__))
 ALLOWED_EXTENSIONS = set(['txt','png','jpg','JPG','PNG','gif','GIF'])
 #----------------------------------------------------------------------------------
@@ -52,15 +55,18 @@ def hello_world():
 @app.route('/old_qus')  
 def give_me_qus():
     give()    
-    time.sleep(1)
-    img_stream = os.path.join(app.config['Qwating_folder'], qus.imgname)
+    #global qus
+    #qus = datas_to_issue(datas)			
+    time.sleep(0.1)
+    img_stream = os.path.join(app.config['Qwating_folder'], qus.imgnum)
     return render_template('oldqus.html', img_stream=img_stream)  
 
 @app.route('/old_ans')  
 def give_me_ans():
-    #imgname = os.listdir( os.path.join(mypath, fileder) )[0]
-    img_stream = search_qus()
-    return render_template('oldans.html', img_stream=img_stream)  
+    #qus = datas_to_issue(datas)			
+    memo = qus.memo
+    img_stream = os.path.join(app.config['Awating_folder'], qus.imgnum)    
+    return render_template('oldans.html', img_stream=img_stream, memo = memo)  
 
 # 上传文件
 @app.route('/api/upload',methods=['GET', 'POST'],strict_slashes=False)
@@ -116,7 +122,25 @@ def api_upload2():
 
 	elif request.method == 'POST':		
 		if request.form["button"] == "show_answer":			
-			return give_me_ans()						
+			return give_me_ans()					
+		elif request.form["button"] == "dataupload":			
+			#qus = datas_to_issue(datas)			
+			#获取表单
+			point = float(request.values.get("point"))
+			memo = str(request.values.get("memo"))			
+			#记录
+			#qus.write_history(point)#记录history
+			if memo != "0":
+				print "0000000000"
+       			#qus.memo.append(memo)#记录memo
+			imgname = qus.imgnum
+			shutil.move(mypath + "\\" + "questionwaiting" + "\\" + imgname, mypath + "\\" + "questiondata") 
+			if os.path.isfile(mypath + "\\" + "answerwaiting" + "\\" + imgname):	
+				#move_file(mypath, Awating_folder, ANS_folder, imgname, use_old_name = True)				
+				shutil.move(mypath + "\\" + "answerwaiting" + "\\" + imgname, mypath + "\\" + "answerdata") 
+			#写文件
+			#writefile(mypath, dataname, datas)
+			return hello_world()		
 		else:
 			return jsonify({"errno":1001,"errmsg":"上传失败"})
 #----------------------------------------------------------------------------------

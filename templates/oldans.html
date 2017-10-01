@@ -7,20 +7,27 @@
     <title>源氏のために勉強せよ！</title>
   </head>
 
-  <div class="bg">
-  </div>
-
   <body>    
 
-	<img class="showimg" src="{{ img_stream }}">  
+	
 	<form id="form2" method="post" action="/api/upload2" enctype="multipart/form-data">
 		<div class="frame">	
-				
+			<img class="showimg" src="{{ img_stream }}">  
+			<br>
+			<br>
+			答案{{memo}}
+			<br>
+			得点:
+			<input class="inputtext" type="text" name="point" value="0">
+			memo:
+			<input class="inputtext" type="text" name="memo" value="0">
+			<input type="submit" name = "button" value = "dataupload" ></input>
 		</div>
 	</form>
 
   </body>
-
+  <div class="bg">
+  </div>
 </html>
 
 <!--git add -A // To track all files
