@@ -43,8 +43,8 @@ def allowed_file(filename):
 
 
 @app.route('/')  
-def hello_world():  
-    img_stream, remenber = search_qus(True)	
+def hello_world(qus_type = False):  
+    img_stream, remenber = search_qus(needremenber = True, qus_type = qus_type)	
     hp = what_is_hp(sysdatas)
     onekill = sysdatas["onekill"]
     progress = what_is_progress(sysdatas, rate = True)
@@ -58,7 +58,7 @@ def hello_world():
 def give_me_qus(qus_type):
     if not os.listdir("C:/Users/tomato/OneDrive/code/gakusyu assist/static/questionwaiting"):
     	"如果是空文件夹"
-    	give(que_type)        	
+    	give(qus_type)        	
     else :#如果存在未解决问题就不要出题
     	global qus
     	qus = datas_to_issue(datas, qus_type)			
@@ -125,9 +125,14 @@ def api_upload():
 		elif request.form["button"] == "old":
 			#出旧题		
 			qus_type = str(request.values.get("qus_type"))		
-			if qus_type == "--全部问题--":
+			if qus_type == "--all--":
 				qus_type = False
 			return give_me_qus(qus_type)
+		elif request.form["button"] == "show_img":
+			qus_type = str(request.values.get("qus_type"))		
+			if qus_type == "--all--":
+				qus_type = False
+			return hello_world(qus_type)
 		else:
 			return jsonify({"errno":1001,"errmsg":"上传失败"})
 
@@ -140,7 +145,7 @@ def api_upload2():
 		if request.form["button"] == "show_answer":			
 			return give_me_ans()					
 		elif request.form["button"] == "show_qus":
-			return give_me_qus()
+			return give_me_qus(qus.tag[0])
 		elif request.form["button"] == "dataupload":					
 			#获取表单
 			point = float(request.values.get("point"))
@@ -174,10 +179,10 @@ def new(point, memo, number, tag = None, newname=None, containqus =None):
             qus.imgnum = str(newname)
         writefile(mypath, dataname, datas)
 
-def search_qus(needremenber = False):
+def search_qus(needremenber = False, qus_type = False):
 	"查找特定科目的问题并用来展示"
 	"返回图片路径"	
-	qus = datas_to_issue(datas)			
+	qus = datas_to_issue(datas, qus_type)			
 	imgname = qus.imgnum
 	#问题图片的地址
 	quspath = os.path.join(app.config['QUS_folder'], imgname)
