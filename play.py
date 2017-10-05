@@ -46,9 +46,10 @@ def what_is_progress(sysdatas, rate = False):
 	else :
 		#+总理解度
 		points = map(lambda q :q.understand * contain(q), datas.values())	
+		print sum(points)
 		score += sum(points)
 		score += sysdatas["quizlet"]
-		return round(score, 2)
+		return score
 
 def what_is_hp(sysdatas):
 	score = what_is_progress(sysdatas)

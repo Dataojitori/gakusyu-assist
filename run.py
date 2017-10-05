@@ -44,19 +44,24 @@ def allowed_file(filename):
 
 @app.route('/')  
 def hello_world():  
-    img_stream = search_qus()	
+    img_stream, remenber = search_qus(True)	
     hp = what_is_hp(sysdatas)
     onekill = sysdatas["onekill"]
     progress = what_is_progress(sysdatas, rate = True)
     print "进度".decode('utf-8').encode('gbk'), what_is_progress(sysdatas)
-    return render_template('index.html',  
+    print "是否存在未解决问题".decode('utf-8').encode('gbk'), \
+          os.listdir("C:/Users/tomato/OneDrive/code/gakusyu assist/static/questionwaiting")
+    return render_template('index.html', remenber = remenber,  
                            img_stream=img_stream, hp = hp, onekill = onekill, progress = progress)  
 						   
 @app.route('/old_qus')  
 def give_me_qus():
-    give()    
-    #global qus
-    #qus = datas_to_issue(datas)			
+    if not os.listdir("C:/Users/tomato/OneDrive/code/gakusyu assist/static/questionwaiting"):
+    	"如果是空文件夹"
+    	give()        	
+    else :#如果存在未解决问题就不要出题
+    	global qus
+    	qus = datas_to_issue(datas)			
     time.sleep(0.1)
     img_stream = os.path.join(app.config['Qwating_folder'], qus.imgnum)    
     try :
@@ -130,15 +135,15 @@ def api_upload2():
 	elif request.method == 'POST':		
 		if request.form["button"] == "show_answer":			
 			return give_me_ans()					
+		elif request.form["button"] == "返回问题页面":
+			return give_me_qus()
 		elif request.form["button"] == "dataupload":					
 			#获取表单
 			point = float(request.values.get("point"))
 			contain = int(request.values.get("contain"))				
 			#记录
 			qus.write_history(point)#记录history
-			if qus.qusnum == 0:
-				print "0000000000"
-				qus.qusnum = contain#记录memo
+			qus.qusnum = contain#记录memo
 			imgname = qus.imgnum
 			shutil.move(mypath + "\\" + "questionwaiting" + "\\" + imgname, mypath + "\\" + "questiondata") 
 			if os.path.isfile(mypath + "\\" + "answerwaiting" + "\\" + imgname):					
@@ -165,15 +170,17 @@ def new(point, memo, number, tag = None, newname=None, containqus =None):
             qus.imgnum = str(newname)
         writefile(mypath, dataname, datas)
 
-def search_qus():
+def search_qus(needremenber = False):
 	"查找特定科目的问题并用来展示"
 	"返回图片路径"	
 	qus = datas_to_issue(datas)			
 	imgname = qus.imgnum
 	#问题图片的地址
-	#quspath = os.path.join(mypath, "questiondata", imgname)
 	quspath = os.path.join(app.config['QUS_folder'], imgname)
-	return quspath
+	if needremenber == True :
+		return quspath, qus.whatis_remenber()
+	else :
+		return quspath
 	
 def give():
 	"给我出一道题"
