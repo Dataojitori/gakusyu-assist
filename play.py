@@ -38,16 +38,15 @@ def what_is_progress(sysdatas, rate = False):
 			c = 1
 		return c
 
-	score = len(datas) + sysdatas["onekill"]		
+	score = len(datas) + sysdatas["onekill"]	
+	#+总理解度
+	points = map(lambda q :q.understand * contain(q), datas.values())	
+	score += sum(points)	
 	if rate :
-		if score < 500 :
-			progress = score / 500. * 100
-			return round(progress, 2)
+		#if score < 500 :
+		progress = score / 1000. * 100
+		return round(progress, 2)
 	else :
-		#+总理解度
-		points = map(lambda q :q.understand * contain(q), datas.values())	
-		print sum(points)
-		score += sum(points)
 		score += sysdatas["quizlet"]
 		return score
 

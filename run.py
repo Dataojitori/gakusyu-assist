@@ -55,13 +55,13 @@ def hello_world():
                            img_stream=img_stream, hp = hp, onekill = onekill, progress = progress)  
 						   
 @app.route('/old_qus')  
-def give_me_qus():
+def give_me_qus(qus_type):
     if not os.listdir("C:/Users/tomato/OneDrive/code/gakusyu assist/static/questionwaiting"):
     	"如果是空文件夹"
-    	give()        	
+    	give(que_type)        	
     else :#如果存在未解决问题就不要出题
     	global qus
-    	qus = datas_to_issue(datas)			
+    	qus = datas_to_issue(datas, qus_type)			
     time.sleep(0.1)
     img_stream = os.path.join(app.config['Qwating_folder'], qus.imgnum)    
     try :
@@ -122,8 +122,12 @@ def api_upload():
 			work_on_quizlet(sysdatas)
 			print "已完成quizlet回数".decode('utf-8').encode('gbk'), sysdatas["quizlet"]
 			return hello_world()
-		elif request.form["button"] == "old":					
-			return give_me_qus()
+		elif request.form["button"] == "old":
+			#出旧题		
+			qus_type = str(request.values.get("qus_type"))		
+			if qus_type == "--全部问题--":
+				qus_type = False
+			return give_me_qus(qus_type)
 		else:
 			return jsonify({"errno":1001,"errmsg":"上传失败"})
 
@@ -135,7 +139,7 @@ def api_upload2():
 	elif request.method == 'POST':		
 		if request.form["button"] == "show_answer":			
 			return give_me_ans()					
-		elif request.form["button"] == "返回问题页面":
+		elif request.form["button"] == "show_qus":
 			return give_me_qus()
 		elif request.form["button"] == "dataupload":					
 			#获取表单
@@ -182,11 +186,11 @@ def search_qus(needremenber = False):
 	else :
 		return quspath
 	
-def give():
+def give(qus_type):
 	"给我出一道题"
 	"问题会被放在等待文件夹里,问题变量是qus"
 	global qus
-	qus = datas_to_issue(datas)			
+	qus = datas_to_issue(datas, qus_type)			
 	imgname = qus.imgnum
 	shutil.move(os.path.join(mypath, "questiondata", imgname),os.path.join(mypath, "questionwaiting"))                    
 	try :
