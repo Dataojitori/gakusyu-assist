@@ -102,7 +102,7 @@ def api_upload():
 				#保存问题文件到questiondata
 				qus_img.save( os.path.join(app.config['UPLOAD_FOLDER'] ,newname) ) 
 				
-				if ans_img and allowed_file(ans_img.filename):#如果有答案图片
+				if ans_img:#如果有答案图片
 					ans_img.save( os.path.join(app.config['UPLOAD_FOLDER2'] ,newname) ) 
 				
 				tag = request.values.get("kamoku") #问题标签.数学物理化学
