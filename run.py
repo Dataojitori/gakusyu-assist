@@ -51,6 +51,7 @@ def hello_world(qus_type = False):
     print "进度".decode('utf-8').encode('gbk'), what_is_progress(sysdatas)
     print "是否存在未解决问题".decode('utf-8').encode('gbk'), \
           os.listdir("C:/Users/tomato/OneDrive/code/gakusyu assist/static/questionwaiting")
+    print "目前问题编号".decode('utf-8').encode('gbk'), img_stream
     return render_template('index.html', remenber = remenber,  
                            img_stream=img_stream, hp = hp, onekill = onekill, progress = progress)  
 						   
