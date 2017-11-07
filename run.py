@@ -139,7 +139,7 @@ def api_upload():
 			if qus_type == "--all--":
 				qus_type = False
 			qus = datas_to_issue(datas, qus_type)		
-			point = 0
+			point = qus.whatis_remenber()
 			qus.write_history(point)
 			writefile(mypath, dataname, datas)			
 			return hello_world()
