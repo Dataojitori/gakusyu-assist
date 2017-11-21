@@ -70,7 +70,7 @@ def make_question(mypath, datas, number=None):
 def datas_to_issue(datas, tag = False):
 	"从数据集里找出记忆度最低的问题"
 	def whoisbig(q1, q2):
-		if tag and q2.tag[0] != tag :
+		if tag and (tag in q2.tag) == 0 :
 			return q1
 		else :
 			if q1.whatis_remenber() < q2.whatis_remenber():

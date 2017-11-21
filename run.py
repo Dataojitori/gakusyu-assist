@@ -179,8 +179,10 @@ def new(point, memo, number, tag = None, newname=None, containqus =None):
         "新建一个问题并写入得分"	
         qus = make_question(mypath, datas, number) #一个问题类对象
         qus.write_history(point)
-        if tag :
-            qus.tag.append(str(tag))
+        if tag :		
+            if str(tag) == "TIT" :
+		qus.tag.append("math")
+	    qus.tag.append(str(tag))
         if containqus :
             qus.qusnum = int(containqus)
         if memo != "0":
