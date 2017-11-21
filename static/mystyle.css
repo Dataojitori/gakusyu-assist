@@ -17,7 +17,7 @@ body {
 h1 {
   color: #1F4788;
   position: absolute;
-  top: 20%;
+  top: 0%;
   left: 50%;
   transform: translate(-50%, -50%);
 }
@@ -27,7 +27,7 @@ h1 {
   color: #1F4788;
   position: absolute;
   left: 50%;
-  top: 50%;
+  top: 30%;
   width: 70%;
   transform: translate(-50%, -50%);
   text-align: center;
@@ -44,7 +44,7 @@ input.inputtext {
 img.showimg {
   position: absolute;
   left: 50%;
-  top: 70%;
+  top: 50%;
   transform: translate(-50%);
   //max-height: 60%;
   max-width: 60%;
