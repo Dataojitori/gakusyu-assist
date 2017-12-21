@@ -16,6 +16,7 @@ body {
 
 img.showimg {
   max-width: 80vw;
+  min-width: 80vw;
   position: relative;
   left: 50%;
   transform: translate(-50%);

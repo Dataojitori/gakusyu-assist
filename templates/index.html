@@ -18,7 +18,7 @@
 
     <form id="form1" method="post" action="/api/upload" enctype="multipart/form-data">
       <div class="sub">
-        <p class="main">HP: {{hp}},  初答正确数: {{onekill}},  目标1000问的进度是: {{progress}}%
+        <p class="main">HP: {{hp}},  初答正确数: {{onekill}},  目标100问东工数学的进度是: {{progress}}%
         </p>
 		
         <input class="upfile" id="File1" type="file" name="qus" />
@@ -29,6 +29,7 @@
           <option>physical</option>
           <option>chemistry</option>
 		  <option>TIT</option>
+          <option>YNU</option>
         </select>
 		包含问题数
 		<select class="form-control" name="containqus" id="manufacturer">
@@ -75,6 +76,7 @@
 		<input type="submit" name = "button" value = "old" id="oldqusButton" />	
 		<input type="submit" name = "button" value = "show_img" id="oldqusButton" />		
 		<input type="submit" name = "button" value = "skip" id="oldqusButton" />		
+        <input type="submit" name = "button" value = "hold" id="oldqusButton" />		
 		{{remenber}}
       </div>
     </form>
