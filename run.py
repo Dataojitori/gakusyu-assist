@@ -61,8 +61,8 @@ def give_me_qus(qus_type, rank = False):
     if not os.listdir("C:/Users/tomato/OneDrive/code/gakusyu assist/static/questionwaiting"):
         "如果是空文件夹"
         give(qus_type, rank)          
-    else :#如果存在未解决问题就不要出题
-        return jsonify({"errno":1002,"errmsg":"看看你文件夹"})
+    #else :#如果存在未解决问题就不要出题
+     #   return jsonify({"errno":1002,"errmsg":"看看你文件夹"})
         #global qus
         #qus = datas_to_issue(datas, qus_type)           
     time.sleep(0.1)
@@ -138,6 +138,7 @@ def api_upload():
             return hello_world(qus_type = qus_type, rank = rank, start_rank = rank)          
         elif request.form["button"] == "old":
             #出旧题                    
+            
             return give_me_qus(qus_type, rank)
         elif request.form["button"] == "show_img":                        
             return hello_world(qus_type = qus_type, rank = rank, start_rank = rank)

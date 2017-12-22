@@ -5,6 +5,7 @@ import math
 import pickle
 import os
 import shutil
+import numpy as np
 
 
 def readfile(mypath, filename):
@@ -115,12 +116,22 @@ class mondai:
         self.understand = 0. #♥理解度,0~正无穷
         self.remember = 0. #记忆度,0~1.不需要保存,即用即算
         self.qusnum = 0#所包含的问题个数
+        self.knowledge = 0
 
     def write_memo(self, memo):
         "记录文字笔记"
         self.memo.append([self.wordtime, memo])
-
-    def whatis_remenber(self):
+    def culc_knowledge(self):
+        "计算知识度"        
+        if len(self.history) == 1:
+            self.knowledge = self.history[-1][2]
+        else :
+            only_num = [x[2] for x in self.history]
+            for i in range(len(self.history))[1:]:
+                aver = sum(only_num[:i]) / float(i)
+                self.knowledge += only_num[i] - aver            
+        
+    def whatis_remenber(self):        
         "返回现在的记忆程度百分比"
         t = (time.time() - self.lasttime) / 86400 #自最后一次学习以来的天数
         knowledge = 3**self.understand
