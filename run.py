@@ -56,13 +56,14 @@ def hello_world(qus_type = False, rank = False):
                            img_stream=img_stream, hp = hp, onekill = onekill, progress = progress)  
                            
 @app.route('/old_qus')  
-def give_me_qus(qus_type):
+def give_me_qus(qus_type, rank = False):
     if not os.listdir("C:/Users/tomato/OneDrive/code/gakusyu assist/static/questionwaiting"):
         "如果是空文件夹"
-        give(qus_type)          
+        give(qus_type, rank)          
     else :#如果存在未解决问题就不要出题
-        global qus
-        qus = datas_to_issue(datas, qus_type)           
+        return jsonify({"errno":1002,"errmsg":"看看你文件夹"})
+        #global qus
+        #qus = datas_to_issue(datas, qus_type)           
     time.sleep(0.1)
     img_stream = os.path.join(app.config['Qwating_folder'], qus.imgnum)
     print "解答历史".decode('utf-8').encode('gbk'), qus.history
@@ -93,6 +94,12 @@ def api_upload():
         qus_dir = os.path.join( mypath, "questionwaiting")
         ans_dir = os.path.join( mypath, "answerwaiting")        
         
+        #锁定问题的type类型和rank排序
+        qus_type = str(request.values.get("qus_type"))      
+        if qus_type == "--all--":
+            qus_type = False
+        rank = int(request.values.get("rank"))#找排名第几的问题
+        
         if request.form["button"] == "imgupload":
             qus_img=request.files['qus']  # 从表单的file字段获取文件，myfile为该表单的name值
             ans_img=request.files['ans']
@@ -113,42 +120,31 @@ def api_upload():
                 memo = str(request.values.get("memo"))#笔记
                 #开始主程序
                 new(point, memo, namenum, tag, newname, containqus)
-                return hello_world()    
+                return hello_world(qus_type, rank)
                 
         elif request.form["button"] == "onekill":
             #初次做对了一道题
             num = request.values.get("onekillnum")
             onekilled_a_qus(sysdatas, int(num))
-            return hello_world()                       
+            writefile(mypath, dataname, datas)          
+            return hello_world(qus_type, rank)                       
+                        
         elif request.form["button"] == "old":
-            #出旧题        
-            qus_type = str(request.values.get("qus_type"))      
-            if qus_type == "--all--":
-                qus_type = False
-            return give_me_qus(qus_type)
-        elif request.form["button"] == "show_img":
-            rank = int(request.values.get("rank"))#找排名第几的问题
-            qus_type = str(request.values.get("qus_type"))      
-            if qus_type == "--all--":
-                qus_type = False
+            #出旧题                    
+            return give_me_qus(qus_type, rank)
+        elif request.form["button"] == "show_img":                        
             return hello_world(qus_type, rank)
-        elif request.form["button"] == "skip":
-            qus_type = str(request.values.get("qus_type"))
-            if qus_type == "--all--":
-                qus_type = False
-            qus = datas_to_issue(datas, qus_type)       
+        elif request.form["button"] == "skip":            
+            qus = datas_to_issue(datas, qus_type, rank)       
             point = qus.whatis_remenber()
             qus.write_history(point)
             writefile(mypath, dataname, datas)          
-            return hello_world()
-        elif request.form["button"] == "hold":
-            qus_type = str(request.values.get("qus_type"))
-            if qus_type == "--all--":
-                qus_type = False
-            qus = datas_to_issue(datas, qus_type)
+            return hello_world(qus_type, rank)
+        elif request.form["button"] == "hold":          
+            qus = datas_to_issue(datas, qus_type, rank)
             qus.tag.append("hold")
             writefile(mypath, dataname, datas)          
-            return hello_world()
+            return hello_world(qus_type, rank)
         else:
             return jsonify({"errno":1001,"errmsg":"上传失败"})
 
@@ -200,7 +196,7 @@ def new(point, memo, number, tag = None, newname=None, containqus =None):
 def search_qus(needremenber = False, qus_type = False, rank = False):
     "查找特定科目的问题并用来展示"
     "返回图片路径"    
-    qus = datas_to_issue(datas, qus_type)           
+    qus = datas_to_issue(datas, qus_type, rank)           
     imgname = qus.imgnum
     #问题图片的地址
     quspath = os.path.join(app.config['QUS_folder'], imgname)
@@ -209,11 +205,11 @@ def search_qus(needremenber = False, qus_type = False, rank = False):
     else :
         return quspath
     
-def give(qus_type):
+def give(qus_type, rank = False):
     "给我出一道题"
     "问题会被放在等待文件夹里,问题变量是qus"
     global qus
-    qus = datas_to_issue(datas, qus_type)           
+    qus = datas_to_issue(datas, qus_type, rank)           
     imgname = qus.imgnum
     shutil.move(os.path.join(mypath, "questiondata", imgname),os.path.join(mypath, "questionwaiting"))                    
     try :
