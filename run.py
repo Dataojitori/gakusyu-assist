@@ -43,8 +43,8 @@ def allowed_file(filename):
 
 
 @app.route('/')  
-def hello_world(qus_type = False):  
-    img_stream, remenber = search_qus(needremenber = True, qus_type = qus_type) 
+def hello_world(qus_type = False, rank = False):  
+    img_stream, remenber = search_qus(needremenber = True, qus_type = qus_type, rank = rank) 
     hp = what_is_hp(sysdatas)
     onekill = sysdatas["onekill"]
     progress = what_is_progress(sysdatas, rate = True)
@@ -119,11 +119,7 @@ def api_upload():
             #初次做对了一道题
             num = request.values.get("onekillnum")
             onekilled_a_qus(sysdatas, int(num))
-            return hello_world()                
-        elif request.form["button"] == "quizlet":
-            work_on_quizlet(sysdatas)
-            print "已完成quizlet回数".decode('utf-8').encode('gbk'), sysdatas["quizlet"]
-            return hello_world()
+            return hello_world()                       
         elif request.form["button"] == "old":
             #出旧题        
             qus_type = str(request.values.get("qus_type"))      
@@ -131,10 +127,11 @@ def api_upload():
                 qus_type = False
             return give_me_qus(qus_type)
         elif request.form["button"] == "show_img":
+            rank = int(request.values.get("rank"))#找排名第几的问题
             qus_type = str(request.values.get("qus_type"))      
             if qus_type == "--all--":
                 qus_type = False
-            return hello_world(qus_type)
+            return hello_world(qus_type, rank)
         elif request.form["button"] == "skip":
             qus_type = str(request.values.get("qus_type"))
             if qus_type == "--all--":
@@ -200,7 +197,7 @@ def new(point, memo, number, tag = None, newname=None, containqus =None):
                 qus.imgnum = str(newname)
         writefile(mypath, dataname, datas)
 
-def search_qus(needremenber = False, qus_type = False):
+def search_qus(needremenber = False, qus_type = False, rank = False):
     "查找特定科目的问题并用来展示"
     "返回图片路径"    
     qus = datas_to_issue(datas, qus_type)           

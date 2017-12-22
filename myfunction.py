@@ -67,24 +67,41 @@ def make_question(mypath, datas, number=None):
         datas[number] = question
     return question
     
-def datas_to_issue(datas, tag = False):
+def datas_to_issue(datas, tag = False, rank = False):
     "从数据集里找出记忆度最低的问题"
-    def whoisbig(q1, q2):    
-        if tag :
-            if (tag in q1.tag) == 0 :
-                "如果q1不包含所找标签"
-                return q2
-            if (tag in q2.tag) == 0 :
-                "如果q2不包含所找标签"
+    if rank:
+        sort_datas = sort_issue(datas, tag)
+        question = sort_datas[rank]
+    else :
+        def whoisbig(q1, q2):    
+            if tag :
+                if (tag in q1.tag) == 0 :
+                    "如果q1不包含所找标签"
+                    return q2
+                if (tag in q2.tag) == 0 :
+                    "如果q2不包含所找标签"
+                    return q1
+            if q1.whatis_remenber() < q2.whatis_remenber():
                 return q1
-        if q1.whatis_remenber() < q2.whatis_remenber():
-            return q1
-        else :
-            return q2
-    quses = filter(lambda x: "hold" not in x.tag, datas.values())
-    question = reduce(whoisbig, quses)
+            else :
+                return q2
+        quses = filter(lambda x: "hold" not in x.tag, datas.values())
+        question = reduce(whoisbig, quses)
+        
     return question
 
+def sort_issue(datas, tag = False, view = False):
+    "排序问题"
+    quses = filter(lambda x: "hold" not in x.tag, datas.values())
+    if tag :
+        quses = filter(lambda x: tag not in x.tag, datas.values())
+    sort_datas = sorted( quses, key = lambda x: x.whatis_remenber() )
+    
+    if view :
+        ranks = [a.whatis_remenber() for a in sort_datas]
+        return ranks
+    return sort_datas
+    
 class mondai:
     """问题类，每个类存放一个问题的数据"""
     """公式为e^-(t/(3^n))。知识度n是3的指数。t时间单位是天"""
