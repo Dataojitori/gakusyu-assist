@@ -115,21 +115,23 @@ class mondai:
         self.lasttime = 0. #♥最后一次学习的时间，单位为1970以来的秒
         self.understand = 0. #♥理解度,0~正无穷
         self.remember = 0. #记忆度,0~1.不需要保存,即用即算
-        self.qusnum = 0#所包含的问题个数
-        self.knowledge = 0
+        self.qusnum = 0#所包含的问题个数        
 
     def write_memo(self, memo):
         "记录文字笔记"
         self.memo.append([self.wordtime, memo])
     def culc_knowledge(self):
         "计算知识度"        
+        weight = 5
+        self.knowledge = 0
         if len(self.history) == 1:
-            self.knowledge = self.history[-1][2]
+            self.knowledge = self.history[-1][2] / float(weight)
         else :
-            only_num = [x[2] for x in self.history]
+            only_num = [0,0,0,0] + [x[2] for x in self.history]
             for i in range(len(self.history))[1:]:
-                aver = sum(only_num[:i]) / float(i)
-                self.knowledge += only_num[i] - aver            
+                aver = np.average(only_num[i-1:weight-1+i],weights=[1,1.5,2,2.5,3])                
+                self.knowledge += only_num[i+weight-1] - aver            
+                #print(aver,only_num[i-1:weight-1+i], only_num[i+weight-1], only_num[i+weight-1] - aver)
         
     def whatis_remenber(self):        
         "返回现在的记忆程度百分比"
