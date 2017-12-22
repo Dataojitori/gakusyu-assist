@@ -64,7 +64,9 @@
 		<input type="submit" name = "button" value = "onekill" id="onekillButton" />
 		<br>		        
         排序:
-        <input class="inputtext" type="text" name="rank" value="0">
+        <input class="inputtext" type="text" name="rank" value={{start_rank}}>
+        <input type="submit" name = "button" value = "-1" ></input>
+        <input type="submit" name = "button" value = "+1" ></input>
 		<br>
 		過去問を解く
 		<select class="form-control" name="qus_type" id="manufacturer">
@@ -78,7 +80,7 @@
 		<input type="submit" name = "button" value = "show_img" id="oldqusButton" />		
 		<input type="submit" name = "button" value = "skip" id="oldqusButton" />		
         <input type="submit" name = "button" value = "hold" id="oldqusButton" />		
-		{{remenber}}
+		{{remenber}} 总问题数:{{total_qus}}
       </div>
     </form>
 

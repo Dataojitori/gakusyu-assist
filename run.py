@@ -43,17 +43,18 @@ def allowed_file(filename):
 
 
 @app.route('/')  
-def hello_world(qus_type = False, rank = False):  
+def hello_world(qus_type = False, rank = False, start_rank = 0):  
     img_stream, remenber = search_qus(needremenber = True, qus_type = qus_type, rank = rank) 
     hp = what_is_hp(sysdatas)
     onekill = sysdatas["onekill"]
     progress = what_is_progress(sysdatas, rate = True)
+    total_qus = len( sort_issue(datas) )
     print "进度".decode('utf-8').encode('gbk'), what_is_progress(sysdatas)
     print "是否存在未解决问题".decode('utf-8').encode('gbk'), \
           os.listdir("C:/Users/tomato/OneDrive/code/gakusyu assist/static/questionwaiting")
     print "目前问题编号".decode('utf-8').encode('gbk'), img_stream    
-    return render_template('index.html', remenber = remenber,  
-                           img_stream=img_stream, hp = hp, onekill = onekill, progress = progress)  
+    return render_template('index.html', remenber = remenber, start_rank = start_rank, 
+                           img_stream=img_stream, hp = hp, onekill = onekill, progress = progress, total_qus = total_qus)  
                            
 @app.route('/old_qus')  
 def give_me_qus(qus_type, rank = False):
@@ -120,31 +121,37 @@ def api_upload():
                 memo = str(request.values.get("memo"))#笔记
                 #开始主程序
                 new(point, memo, namenum, tag, newname, containqus)
-                return hello_world(qus_type, rank)
+                return hello_world(qus_type = qus_type, rank = rank, start_rank = rank)
                 
         elif request.form["button"] == "onekill":
             #初次做对了一道题
             num = request.values.get("onekillnum")
             onekilled_a_qus(sysdatas, int(num))
             writefile(mypath, dataname, datas)          
-            return hello_world(qus_type, rank)                       
+            return hello_world(qus_type = qus_type, rank = rank, start_rank = rank)                       
                         
+        elif request.form["button"] == "-1":
+            rank -= 1
+            return hello_world(qus_type = qus_type, rank = rank, start_rank = rank)          
+        elif request.form["button"] == "+1":
+            rank += 1
+            return hello_world(qus_type = qus_type, rank = rank, start_rank = rank)          
         elif request.form["button"] == "old":
             #出旧题                    
             return give_me_qus(qus_type, rank)
         elif request.form["button"] == "show_img":                        
-            return hello_world(qus_type, rank)
+            return hello_world(qus_type = qus_type, rank = rank, start_rank = rank)
         elif request.form["button"] == "skip":            
             qus = datas_to_issue(datas, qus_type, rank)       
             point = qus.whatis_remenber()
             qus.write_history(point)
             writefile(mypath, dataname, datas)          
-            return hello_world(qus_type, rank)
+            return hello_world(qus_type = qus_type, rank = rank, start_rank = rank)
         elif request.form["button"] == "hold":          
             qus = datas_to_issue(datas, qus_type, rank)
             qus.tag.append("hold")
             writefile(mypath, dataname, datas)          
-            return hello_world(qus_type, rank)
+            return hello_world(qus_type = qus_type, rank = rank, start_rank = rank)
         else:
             return jsonify({"errno":1001,"errmsg":"上传失败"})
 
