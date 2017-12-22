@@ -125,18 +125,18 @@ class mondai:
         weight = 5
         self.knowledge = 0
         if len(self.history) == 1:
-            self.knowledge = self.history[-1][2] / float(weight)
+            self.knowledge = self.history[-1][2]
         else :
             only_num = [0,0,0,0] + [x[2] for x in self.history]
             for i in range(len(self.history))[1:]:
                 aver = np.average(only_num[i-1:weight-1+i],weights=[1,1.5,2,2.5,3])                
-                self.knowledge += only_num[i+weight-1] - aver            
-                #print(aver,only_num[i-1:weight-1+i], only_num[i+weight-1], only_num[i+weight-1] - aver)
+                self.knowledge += only_num[i+weight-1] - aver                           
         
     def whatis_remenber(self):        
         "返回现在的记忆程度百分比"
+        self.culc_knowledge()
         t = (time.time() - self.lasttime) / 86400 #自最后一次学习以来的天数
-        knowledge = 3**self.understand
+        knowledge = 3**self.knowledge
         self.remember = math.e**(-t / knowledge)
         return self.remember
 
