@@ -3,7 +3,7 @@
 import time
 import math
 import pickle
-import os
+import os,re
 import shutil
 import numpy as np
 
@@ -70,32 +70,50 @@ def make_question(mypath, datas, number=None):
     
 def datas_to_issue(datas, tag = False, rank = False):
     "从数据集里找出记忆度最低的问题"
-    if rank:
-        sort_datas = sort_issue(datas, tag)
-        question = sort_datas[rank]
-    else :
-        def whoisbig(q1, q2):    
-            if tag :
-                if (tag in q1.tag) == 0 :
-                    "如果q1不包含所找标签"
-                    return q2
-                if (tag in q2.tag) == 0 :
-                    "如果q2不包含所找标签"
-                    return q1
-            if q1.whatis_remenber() < q2.whatis_remenber():
-                return q1
-            else :
-                return q2
-        quses = filter(lambda x: "hold" not in x.tag, datas.values())
-        question = reduce(whoisbig, quses)
+    if not rank:
+        rank = 0
+        
+    sort_datas = sort_issue(datas, tag)
+    question = sort_datas[rank]
+    # else :
+        # def whoisbig(q1, q2):    
+            # if tag :
+                # if (tag in q1.tag) == 0 :
+                    # "如果q1不包含所找标签"
+                    # return q2
+                # if (tag in q2.tag) == 0 :
+                    # "如果q2不包含所找标签"
+                    # return q1
+            # if q1.whatis_remenber() < q2.whatis_remenber():
+                # return q1
+            # else :
+                # return q2
+        # quses = filter(lambda x: "hold" not in x.tag, datas.values())
+        # question = reduce(whoisbig, quses)
         
     return question
 
 def sort_issue(datas, tag = False, view = False):
     "排序问题"
+    def match_memo(q):        
+        for list in q.memo:
+            for m in list:             
+                if pattern.match(m):
+                    return True
+                
     quses = filter(lambda x: "hold" not in x.tag, datas.values())
-    if tag :
-        quses = filter(lambda x: tag not in x.tag, datas.values())
+    if tag :        
+        if tag == "mathtit":
+            #正则表达式筛选memo
+            tag = "TIT"
+            pattern = re.compile(r'H..')
+            quses = filter(match_memo, quses)            
+        elif tag == "chemistrytit":
+            #正则表达式筛选memo
+            tag = "chemistry"
+            pattern = re.compile(r'H..')
+            quses = filter(match_memo, quses)                    
+        quses = filter(lambda x: tag in x.tag, quses)
     sort_datas = sorted( quses, key = lambda x: x.whatis_remenber() )
     
     if view :
@@ -115,15 +133,15 @@ class mondai:
         self.lasttime = 0. #♥最后一次学习的时间，单位为1970以来的秒
         self.understand = 0. #♥理解度,0~正无穷
         self.remember = 0. #记忆度,0~1.不需要保存,即用即算
-        self.qusnum = 0#所包含的问题个数        
+        self.qusnum = 0#所包含的问题个数                
 
     def write_memo(self, memo):
         "记录文字笔记"
         self.memo.append([self.wordtime, memo])
     def culc_knowledge(self):
         "计算知识度"        
-        weight = 5
         self.knowledge = 0
+        weight = 5        
         if len(self.history) == 1:
             self.knowledge = self.history[-1][2]
         else :

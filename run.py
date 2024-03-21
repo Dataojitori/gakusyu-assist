@@ -1,3 +1,4 @@
+#! python2
 # -*- coding:utf-8 -*-
 
 from werkzeug.utils import secure_filename
@@ -51,14 +52,14 @@ def hello_world(qus_type = False, rank = False, start_rank = 0):
     total_qus = len( sort_issue(datas) )
     print "进度".decode('utf-8').encode('gbk'), what_is_progress(sysdatas)
     print "是否存在未解决问题".decode('utf-8').encode('gbk'), \
-          os.listdir("C:/Users/tomato/OneDrive/code/gakusyu assist/static/questionwaiting")
+          os.listdir("C:/Users/niwatori/OneDrive/code/gakusyu assist/static/questionwaiting")
     print "目前问题编号".decode('utf-8').encode('gbk'), img_stream    
     return render_template('index.html', remenber = remenber, start_rank = start_rank, 
                            img_stream=img_stream, hp = hp, onekill = onekill, progress = progress, total_qus = total_qus)  
                            
 @app.route('/old_qus')  
 def give_me_qus(qus_type, rank = False):
-    if not os.listdir("C:/Users/tomato/OneDrive/code/gakusyu assist/static/questionwaiting"):
+    if not os.listdir("C:/Users/niwatori/OneDrive/code/gakusyu assist/static/questionwaiting"):
         "如果是空文件夹"
         give(qus_type, rank)          
     #else :#如果存在未解决问题就不要出题
@@ -137,8 +138,7 @@ def api_upload():
             rank += 1
             return hello_world(qus_type = qus_type, rank = rank, start_rank = rank)          
         elif request.form["button"] == "old":
-            #出旧题                    
-            
+            #出旧题                                
             return give_me_qus(qus_type, rank)
         elif request.form["button"] == "show_img":                        
             return hello_world(qus_type = qus_type, rank = rank, start_rank = rank)
@@ -170,9 +170,12 @@ def api_upload2():
             #获取表单
             point = float(request.values.get("point"))
             contain = int(request.values.get("contain"))                
+            memo = str(request.values.get("memo"))#笔记            
             #记录
             qus.write_history(point)#记录history
-            qus.qusnum = contain#记录memo
+            qus.qusnum = contain#记录问题数
+            if memo != "0":
+                qus.write_memo(memo)
             imgname = qus.imgnum
             shutil.move(mypath + "\\" + "questionwaiting" + "\\" + imgname, mypath + "\\" + "questiondata") 
             if os.path.isfile(mypath + "\\" + "answerwaiting" + "\\" + imgname):                    
@@ -224,11 +227,9 @@ def give(qus_type, rank = False):
         shutil.move(os.path.join(mypath, "answerdata", imgname), os.path.join(mypath, "answerwaiting"))
     except IOError:
         print "没有答案图片"
-
-
-
-
+        
+        
 print search_qus()
 if __name__ == '__main__':
-    #app.run(debug=True)
-    app.run(host='0.0.0.0',debug=True)
+    app.run(debug=True) 
+    #app.run(host='0.0.0.0',debug=True)
